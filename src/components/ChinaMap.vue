@@ -172,6 +172,7 @@ const randomHighlight = () => {
 
   currentHighlightName = newName
   renderChart(newName)
+  chart.dispatchAction({ type: 'showTip', seriesIndex: 0, name: newName })
 }
 
 const handleResize = () => {
