@@ -18,8 +18,50 @@ let resizeObserver: ResizeObserver | null = null
 let highlightTimer: ReturnType<typeof setInterval> | null = null
 let currentHighlightName = ''
 let featureNames: string[] = []
+let allData: { name: string; value: number }[] = []
 
 const CHINA_GEO_URL = 'https://geo.datav.aliyun.com/areas_v3/bound/100000_full.json'
+
+const BASE_BLUE = ['#0a2e5c', '#0d4a8a', '#1a6fb5', '#2196f3', '#42a5f5', '#64b5f6']
+
+const getColor = (value: number, max: number) => {
+  const ratio = Math.min(value / max, 1)
+  const idx = Math.round(ratio * (BASE_BLUE.length - 1))
+  return BASE_BLUE[idx]
+}
+
+const getYellowColor = (value: number, max: number) => {
+  const ratio = Math.min(value / max, 1)
+  const r = Math.round(255 - (255 - 180) * ratio)
+  const g = Math.round(220 - (220 - 120) * ratio)
+  const b = Math.round(50 - (50 - 0) * ratio)
+  return `rgb(${r}, ${g}, ${b})`
+}
+
+const buildAllData = (hoverName: string) => {
+  const maxValue = Math.max(...allData.map(d => d.value), 1)
+  return allData.map(d => {
+    const isHover = d.name === hoverName
+    const color = isHover ? getYellowColor(d.value, maxValue) : getColor(d.value, maxValue)
+    return {
+      name: d.name,
+      value: d.value,
+      itemStyle: {
+        areaColor: color,
+        borderColor: isHover ? '#d4a017' : 'rgba(0, 212, 255, 0.4)',
+        borderWidth: isHover ? 2 : 1,
+        shadowColor: isHover ? `rgba(245, 197, 66, 0.6)` : 'transparent',
+        shadowBlur: isHover ? 15 : 0,
+      },
+      label: {
+        show: isHover || hoverName === '__all__',
+        color: isHover ? '#fff' : 'rgba(255,255,255,0.45)',
+        fontSize: isHover ? 12 : 9,
+        fontWeight: isHover ? ('bold' as const) : ('normal' as const),
+      },
+    }
+  })
+}
 
 const initChart = async () => {
   if (!chartRef.value) return
@@ -27,13 +69,30 @@ const initChart = async () => {
   try {
     const response = await fetch(CHINA_GEO_URL)
     const chinaGeoJson = await response.json()
-
     featureNames = chinaGeoJson.features.map((f: any) => f.properties.name)
 
-    echarts.registerMap('china', chinaGeoJson as any)
+    allData = featureNames.map((name) => {
+      const shortName = name.replace(/省|市|自治区|维吾尔|壮族|回族|特别行政区/g, '')
+      const found = props.data.find(d => d.name === shortName)
+      return { name, value: found ? found.value : 0 }
+    })
 
+    echarts.registerMap('china', chinaGeoJson as any)
     chart = echarts.init(chartRef.value)
-    setOption()
+    renderChart()
+
+    chart.on('mouseover', (params: any) => {
+      if (params.componentType !== 'series' || params.seriesType !== 'map') return
+      stopHighlightLoop()
+      currentHighlightName = params.name
+      renderChart(params.name)
+    })
+
+    chart.on('mouseout', () => {
+      startHighlightLoop()
+    })
+
+    startHighlightLoop()
   } catch (error) {
     console.error('Failed to load China map data:', error)
     if (chartRef.value) {
@@ -42,18 +101,10 @@ const initChart = async () => {
   }
 }
 
-const setOption = () => {
+const renderChart = (hoverName?: string) => {
   if (!chart) return
 
-  const HIGHLIGHT_STYLE = {
-    areaColor: '#1a6fb5',
-    borderColor: '#00d4ff',
-    borderWidth: 2,
-    shadowColor: 'rgba(0, 212, 255, 0.8)',
-    shadowBlur: 20,
-  }
-
-  const option: echarts.EChartsOption = {
+  chart.setOption({
     backgroundColor: 'transparent',
     tooltip: {
       trigger: 'item',
@@ -61,23 +112,12 @@ const setOption = () => {
       borderColor: 'rgba(0, 212, 255, 0.3)',
       textStyle: { color: '#fff' },
       formatter: (params: any) => {
-        const name = params.name.replace(/省|市|自治区|维吾尔|壮族|回族|特别行政区/g, '')
-        return `${name}<br/>数据量: ${params.value || 0}`
+        if (params.componentType === 'series') {
+          const name = params.name.replace(/省|市|自治区|维吾尔|壮族|回族|特别行政区/g, '')
+          return `${name}<br/>数据量: ${params.value || 0}`
+        }
+        return ''
       },
-    },
-    visualMap: {
-      min: 0,
-      max: 2500,
-      left: 20,
-      bottom: 20,
-      text: ['高', '低'],
-      textStyle: { color: 'rgba(255,255,255,0.65)' },
-      inRange: {
-        color: ['#0a2e5c', '#0d4a8a', '#1a6fb5', '#2196f3', '#42a5f5', '#64b5f6'],
-      },
-      show: true,
-      itemWidth: 12,
-      itemHeight: 100,
     },
     series: [
       {
@@ -86,14 +126,7 @@ const setOption = () => {
         roam: false,
         zoom: 1.2,
         center: [104, 36],
-        data: featureNames.map((name) => {
-          const shortName = name.replace(/省|市|自治区|维吾尔|壮族|回族|特别行政区/g, '')
-          const found = props.data.find(d => d.name === shortName)
-          return { name, value: found ? found.value : 0 }
-        }),
-        label: {
-          show: false,
-        },
+        data: buildAllData(hoverName || ''),
         emphasis: {
           label: {
             show: true,
@@ -101,43 +134,17 @@ const setOption = () => {
             fontSize: 12,
             fontWeight: 'bold',
           },
-          itemStyle: HIGHLIGHT_STYLE,
-        },
-        itemStyle: {
-          areaColor: '#0d3b6e',
-          borderColor: 'rgba(0, 212, 255, 0.4)',
-          borderWidth: 1,
-        },
-        select: {
-          label: {
-            show: true,
-            color: '#fff',
-            fontSize: 12,
-            fontWeight: 'bold',
+          itemStyle: {
+            areaColor: '#f5c542',
+            borderColor: '#d4a017',
+            borderWidth: 2,
+            shadowColor: 'rgba(245, 197, 66, 0.8)',
+            shadowBlur: 20,
           },
-          itemStyle: HIGHLIGHT_STYLE,
         },
-        selectedMode: 'single',
       },
     ],
-  }
-
-  chart.setOption(option)
-
-  chart.on('mouseover', () => {
-    stopHighlightLoop()
-    if (currentHighlightName) {
-      chart!.dispatchAction({ type: 'unselect', seriesIndex: 0, name: currentHighlightName })
-      chart!.dispatchAction({ type: 'hideTip', seriesIndex: 0 })
-      currentHighlightName = ''
-    }
-  })
-
-  chart.on('mouseout', () => {
-    startHighlightLoop()
-  })
-
-  startHighlightLoop()
+  }, true)
 }
 
 const startHighlightLoop = () => {
@@ -156,11 +163,7 @@ const stopHighlightLoop = () => {
 }
 
 const randomHighlight = () => {
-  if (!chart || featureNames.length === 0) return
-
-  if (currentHighlightName) {
-    chart.dispatchAction({ type: 'unselect', seriesIndex: 0, name: currentHighlightName })
-  }
+  if (!chart || allData.length === 0) return
 
   let newName: string
   do {
@@ -168,9 +171,7 @@ const randomHighlight = () => {
   } while (newName === currentHighlightName && featureNames.length > 1)
 
   currentHighlightName = newName
-
-  chart.dispatchAction({ type: 'select', seriesIndex: 0, name: newName })
-  chart.dispatchAction({ type: 'showTip', seriesIndex: 0, name: newName })
+  renderChart(newName)
 }
 
 const handleResize = () => {
