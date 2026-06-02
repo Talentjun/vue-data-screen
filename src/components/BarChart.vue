@@ -19,6 +19,9 @@ const colors = ['#00bfff', '#ff4757']
 
 const options = computed<echarts.EChartsOption>(() => ({
   backgroundColor: 'transparent',
+  animation: true,
+  animationDuration: 800,
+  animationEasing: 'cubicOut' as const,
   grid: {
     top: 30,
     right: 15,

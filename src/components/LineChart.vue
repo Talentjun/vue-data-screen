@@ -17,6 +17,9 @@ const chartRef = ref<HTMLElement | null>(null)
 
 const options = computed<echarts.EChartsOption>(() => ({
   backgroundColor: 'transparent',
+  animation: true,
+  animationDuration: 800,
+  animationEasing: 'cubicOut' as const,
   grid: {
     top: 30,
     right: 15,

@@ -1,5 +1,5 @@
 <template>
-  <div ref="cardRef" class="stat-card" :class="{ 'is-fullscreen': isFullscreen }" :style="{ '--card-color': data.color }">
+  <div ref="cardRef" class="stat-card" :class="{ 'is-fullscreen': isFullscreen, 'is-updating': isUpdating }" :style="{ '--card-color': data.color }">
     <button class="fullscreen-btn" @click="toggleFullscreen" :title="isFullscreen ? '退出全屏' : '全屏显示'">
       <svg v-if="!isFullscreen" width="14" height="14" viewBox="0 0 16 16" fill="currentColor">
         <path d="M1.5 1h4a.5.5 0 0 1 0 1H2v3.5a.5.5 0 0 1-1 0v-4a.5.5 0 0 1 .5-.5zm9 0h4a.5.5 0 0 1 .5.5v4a.5.5 0 0 1-1 0V2h-3.5a.5.5 0 0 1 0-1zM1 10.5a.5.5 0 0 1 .5.5v3.5h3.5a.5.5 0 0 1 0 1h-4a.5.5 0 0 1-.5-.5v-4a.5.5 0 0 1 .5-.5zm14 0a.5.5 0 0 1 .5.5v4a.5.5 0 0 1-.5.5h-4a.5.5 0 0 1 0-1H14V11a.5.5 0 0 1 .5-.5z"/>
@@ -55,7 +55,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted } from 'vue'
+import { ref, watch, onMounted, onUnmounted } from 'vue'
 import type { StatCardData } from '../types'
 
 interface Props {
@@ -67,6 +67,7 @@ const props = defineProps<Props>()
 const isFullscreen = ref(false)
 const cardRef = ref<HTMLElement | null>(null)
 const displayValue = ref(props.data.value)
+const isUpdating = ref(false)
 
 const toggleFullscreen = async () => {
   if (!cardRef.value) return
@@ -88,9 +89,9 @@ const handleFullscreenChange = () => {
   isFullscreen.value = !!document.fullscreenElement
 }
 
-const animateValue = () => {
+const animateValue = (duration = 1200) => {
   const target = props.data.value
-  const numStr = target.replace(/,/g, '')
+  const numStr = target.toString().replace(/,/g, '')
   const num = parseFloat(numStr)
   if (isNaN(num)) {
     displayValue.value = target
@@ -99,7 +100,6 @@ const animateValue = () => {
 
   const hasDecimal = numStr.includes('.')
   const decimalPlaces = hasDecimal ? numStr.split('.')[1].length : 0
-  const duration = 1200
   const startTime = performance.now()
 
   const step = (now: number) => {
@@ -122,6 +122,13 @@ const animateValue = () => {
   displayValue.value = hasDecimal ? '0.' + '0'.repeat(decimalPlaces) : '0'
   requestAnimationFrame(step)
 }
+
+watch(() => props.data.value, (newVal, oldVal) => {
+  if (newVal === oldVal) return
+  isUpdating.value = true
+  setTimeout(() => { isUpdating.value = false }, 300)
+  animateValue(600)
+})
 
 onMounted(() => {
   document.addEventListener('fullscreenchange', handleFullscreenChange)
@@ -163,6 +170,13 @@ onUnmounted(() => {
     0 8px 32px rgba(0, 0, 0, 0.4),
     0 0 20px color-mix(in srgb, var(--card-color) 15%, transparent),
     inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.stat-card.is-updating {
+  border-color: var(--card-color, #00d4ff);
+  box-shadow:
+    0 0 12px color-mix(in srgb, var(--card-color) 30%, transparent),
+    inset 0 0 8px color-mix(in srgb, var(--card-color) 10%, transparent);
 }
 
 .card-corner {
@@ -312,11 +326,11 @@ onUnmounted(() => {
 }
 
 .value-num {
-  font-size: 28px;
+  font-size: 22px;
   font-weight: 700;
   color: #fff;
   font-family: 'DIN', 'Roboto Mono', monospace;
-  letter-spacing: 1px;
+  letter-spacing: 0.5px;
   text-shadow: 0 0 24px color-mix(in srgb, var(--card-color) 60%, transparent);
 }
 

@@ -19,6 +19,9 @@ const colorPalette = ['#00d4ff', '#00e396', '#feb019', '#ff4560', '#775dd0', '#5
 
 const options = computed<echarts.EChartsOption>(() => ({
   backgroundColor: 'transparent',
+  animation: true,
+  animationDuration: 800,
+  animationEasing: 'cubicOut' as const,
   tooltip: {
     trigger: 'item',
     backgroundColor: 'rgba(0, 20, 40, 0.9)',

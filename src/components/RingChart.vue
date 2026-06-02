@@ -21,6 +21,9 @@ const options = computed<echarts.EChartsOption>(() => {
   const total = props.data.reduce((sum, item) => sum + item.value, 0)
   return {
     backgroundColor: 'transparent',
+    animation: true,
+    animationDuration: 800,
+    animationEasing: 'cubicOut' as const,
     tooltip: {
       trigger: 'item',
       backgroundColor: 'rgba(0, 20, 40, 0.9)',

@@ -128,6 +128,9 @@ const renderChart = (hoverName?: string) => {
   if (!chart) return
 
   chart.setOption({
+    animation: true,
+    animationDuration: 800,
+    animationEasing: 'cubicOut',
     tooltip: {
       trigger: 'item',
       backgroundColor: 'rgba(0, 20, 40, 0.9)',
