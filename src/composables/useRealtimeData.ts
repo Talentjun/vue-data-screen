@@ -3,6 +3,7 @@ import type {
   StatCardData,
   LineChartData,
   BarChartData,
+  CalendarChartData,
   ChartDataItem,
   MapDataItem,
 } from '../types'
@@ -66,6 +67,7 @@ export function useRealtimeData(
   initialBarChart: BarChartData,
   initialPieChart: ChartDataItem[],
   initialRingChart: ChartDataItem[],
+  initialCalendarChart: CalendarChartData,
   initialMapData: MapDataItem[],
   config?: RealtimeDataConfig,
 ) {
@@ -78,6 +80,10 @@ export function useRealtimeData(
   const barChartData = ref<BarChartData>(deepCloneBarChartData(initialBarChart))
   const pieChartData = ref<ChartDataItem[]>(deepCloneChartData(initialPieChart))
   const ringChartData = ref<ChartDataItem[]>(deepCloneChartData(initialRingChart))
+  const calendarChartData = ref<CalendarChartData>({
+    ...initialCalendarChart,
+    data: [...initialCalendarChart.data],
+  })
   const mapData = ref<MapDataItem[]>(deepCloneMapData(initialMapData))
 
   let totalVisits = 1284567
@@ -175,12 +181,24 @@ export function useRealtimeData(
     mapData.value = newData
   }
 
+  function updateCalendarChart() {
+    const newData = [...calendarChartData.value.data]
+    const randomIndex = Math.floor(Math.random() * newData.length)
+    const item = newData[randomIndex]
+    if (item) {
+      const [date, value] = item
+      newData[randomIndex] = [date, Math.max(10, fluctuate(value, 0.2, 10))]
+    }
+    calendarChartData.value = { ...calendarChartData.value, data: newData }
+  }
+
   function updateAll() {
     updateStatCards()
     updateLineChart()
     updateBarChart()
     updatePieChart()
     updateRingChart()
+    updateCalendarChart()
     updateMapData()
   }
 
@@ -225,6 +243,7 @@ export function useRealtimeData(
     barChartData,
     pieChartData,
     ringChartData,
+    calendarChartData,
     mapData,
     isRunning,
     interval: intervalMs,

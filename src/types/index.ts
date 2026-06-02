@@ -33,3 +33,8 @@ export interface BarChartData {
     data: number[]
   }[]
 }
+
+export interface CalendarChartData {
+  data: [string, number][]
+  year: number
+}

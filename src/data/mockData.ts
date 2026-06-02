@@ -2,6 +2,7 @@ import type {
   StatCardData,
   LineChartData,
   BarChartData,
+  CalendarChartData,
   ChartDataItem,
   MapDataItem,
 } from '../types'
@@ -118,3 +119,25 @@ export const mapData: MapDataItem[] = [
   { name: '青海', value: 67 },
   { name: '西藏', value: 45 },
 ]
+
+function generateCalendarData(year: number): [string, number][] {
+  const data: [string, number][] = []
+  const startDate = new Date(year, 0, 1)
+  const endDate = new Date(year, 11, 31)
+
+  for (let d = new Date(startDate); d <= endDate; d.setDate(d.getDate() + 1)) {
+    const dateStr = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
+    const dayOfWeek = d.getDay()
+    const isWeekend = dayOfWeek === 0 || dayOfWeek === 6
+    const baseValue = isWeekend ? 300 : 800
+    const randomValue = Math.floor(Math.random() * baseValue) + 100
+    data.push([dateStr, randomValue])
+  }
+
+  return data
+}
+
+export const calendarChartData: CalendarChartData = {
+  data: generateCalendarData(2025),
+  year: 2025,
+}

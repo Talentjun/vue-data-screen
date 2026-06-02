@@ -16,8 +16,8 @@
           </BorderBox>
         </div>
         <div class="panel-item">
-          <BorderBox title="区域分布">
-            <BarChart :data="barChartData" />
+          <BorderBox title="访问热力图">
+            <CalendarChart :data="calendarChartData" />
           </BorderBox>
         </div>
         <div class="panel-item">
@@ -69,6 +69,7 @@ import LineChart from './components/LineChart.vue'
 import BarChart from './components/BarChart.vue'
 import PieChart from './components/PieChart.vue'
 import RingChart from './components/RingChart.vue'
+import CalendarChart from './components/CalendarChart.vue'
 import { useRealtimeData } from './composables/useRealtimeData'
 import {
   statCards as initialStatCards,
@@ -76,6 +77,7 @@ import {
   barChartData as initialBarChart,
   pieChartData as initialPieChart,
   ringChartData as initialRingChart,
+  calendarChartData as initialCalendarChart,
   mapData as initialMapData,
 } from './data/mockData'
 
@@ -85,6 +87,7 @@ const {
   barChartData,
   pieChartData,
   ringChartData,
+  calendarChartData,
   mapData,
   isRunning,
   interval,
@@ -96,6 +99,7 @@ const {
   initialBarChart,
   initialPieChart,
   initialRingChart,
+  initialCalendarChart,
   initialMapData,
   { interval: 5000 },
 )
