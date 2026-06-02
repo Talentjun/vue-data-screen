@@ -1,5 +1,11 @@
 import { ref, onUnmounted, type Ref } from 'vue'
-import type { StatCardData, LineChartData, BarChartData, ChartDataItem, MapDataItem } from '../types'
+import type {
+  StatCardData,
+  LineChartData,
+  BarChartData,
+  ChartDataItem,
+  MapDataItem,
+} from '../types'
 
 interface RealtimeDataConfig {
   interval?: number
@@ -29,29 +35,29 @@ function formatWithCommas(num: number): string {
 }
 
 function deepCloneStatCards(cards: StatCardData[]): StatCardData[] {
-  return cards.map(c => ({ ...c }))
+  return cards.map((c) => ({ ...c }))
 }
 
 function deepCloneLineChartData(data: LineChartData): LineChartData {
   return {
     xAxis: [...data.xAxis],
-    series: data.series.map(s => ({ name: s.name, data: [...s.data] })),
+    series: data.series.map((s) => ({ name: s.name, data: [...s.data] })),
   }
 }
 
 function deepCloneBarChartData(data: BarChartData): BarChartData {
   return {
     xAxis: [...data.xAxis],
-    series: data.series.map(s => ({ name: s.name, data: [...s.data] })),
+    series: data.series.map((s) => ({ name: s.name, data: [...s.data] })),
   }
 }
 
 function deepCloneChartData(items: ChartDataItem[]): ChartDataItem[] {
-  return items.map(i => ({ ...i }))
+  return items.map((i) => ({ ...i }))
 }
 
 function deepCloneMapData(items: MapDataItem[]): MapDataItem[] {
-  return items.map(i => ({ ...i }))
+  return items.map((i) => ({ ...i }))
 }
 
 export function useRealtimeData(
@@ -132,7 +138,7 @@ export function useRealtimeData(
   function updateLineChart() {
     const newData = deepCloneLineChartData(lineChartData.value)
     for (const s of newData.series) {
-      s.data = s.data.map(v => fluctuate(v, 0.1, 200))
+      s.data = s.data.map((v) => fluctuate(v, 0.1, 200))
     }
     lineChartData.value = newData
   }
@@ -140,7 +146,7 @@ export function useRealtimeData(
   function updateBarChart() {
     const newData = deepCloneBarChartData(barChartData.value)
     for (const s of newData.series) {
-      s.data = s.data.map(v => fluctuate(v, 0.15, 500))
+      s.data = s.data.map((v) => fluctuate(v, 0.15, 500))
     }
     barChartData.value = newData
   }

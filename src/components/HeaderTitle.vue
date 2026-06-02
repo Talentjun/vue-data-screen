@@ -10,16 +10,24 @@
     </div>
     <div class="header-right">
       <div class="control-panel">
-        <button class="control-btn" @click="$emit('toggle')" :title="isRunning ? '暂停更新' : '开始更新'">
+        <button
+          class="control-btn"
+          @click="$emit('toggle')"
+          :title="isRunning ? '暂停更新' : '开始更新'"
+        >
           <svg v-if="isRunning" width="14" height="14" viewBox="0 0 16 16" fill="currentColor">
-            <rect x="3" y="2" width="4" height="12" rx="1"/>
-            <rect x="9" y="2" width="4" height="12" rx="1"/>
+            <rect x="3" y="2" width="4" height="12" rx="1" />
+            <rect x="9" y="2" width="4" height="12" rx="1" />
           </svg>
           <svg v-else width="14" height="14" viewBox="0 0 16 16" fill="currentColor">
-            <polygon points="3,2 14,8 3,14"/>
+            <polygon points="3,2 14,8 3,14" />
           </svg>
         </button>
-        <select class="interval-select" :value="interval" @change="$emit('update-interval', Number(($event.target as HTMLSelectElement).value))">
+        <select
+          class="interval-select"
+          :value="interval"
+          @change="$emit('update-interval', Number(($event.target as HTMLSelectElement).value))"
+        >
           <option :value="3000">3s</option>
           <option :value="5000">5s</option>
           <option :value="10000">10s</option>
@@ -125,7 +133,9 @@ onUnmounted(() => {
   font-weight: 700;
   color: #fff;
   letter-spacing: 8px;
-  text-shadow: 0 0 20px rgba(0, 212, 255, 0.6), 0 0 40px rgba(0, 212, 255, 0.3);
+  text-shadow:
+    0 0 20px rgba(0, 212, 255, 0.6),
+    0 0 40px rgba(0, 212, 255, 0.3);
   white-space: nowrap;
   margin: 0;
 }

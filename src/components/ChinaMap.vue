@@ -40,8 +40,8 @@ const getYellowColor = (value: number, max: number) => {
 }
 
 const buildAllData = (hoverName: string) => {
-  const maxValue = Math.max(...allData.map(d => d.value), 1)
-  return allData.map(d => {
+  const maxValue = Math.max(...allData.map((d) => d.value), 1)
+  return allData.map((d) => {
     const isHover = d.name === hoverName
     const color = isHover ? getYellowColor(d.value, maxValue) : getColor(d.value, maxValue)
     return {
@@ -71,7 +71,7 @@ const initChart = () => {
 
   allData = featureNames.map((name) => {
     const shortName = name.replace(/省|市|自治区|维吾尔|壮族|回族|特别行政区/g, '')
-    const found = props.data.find(d => d.name === shortName)
+    const found = props.data.find((d) => d.name === shortName)
     return { name, value: found ? found.value : 0 }
   })
 
