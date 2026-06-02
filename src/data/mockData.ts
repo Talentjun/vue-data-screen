@@ -1,10 +1,44 @@
-import type { StatCardData, LineChartData, BarChartData, ChartDataItem, MapDataItem } from '../types'
+import type {
+  StatCardData,
+  LineChartData,
+  BarChartData,
+  ChartDataItem,
+  MapDataItem,
+} from '../types'
 
 export const statCards: StatCardData[] = [
-  { title: '总访问量', value: '1,284,567', unit: '次', color: '#00d4ff', trend: 'up', trendValue: '+12.5%' },
-  { title: '今日活跃', value: '38,492', unit: '人', color: '#00e396', trend: 'up', trendValue: '+8.3%' },
-  { title: '转化率', value: '68.7', unit: '%', color: '#feb019', trend: 'down', trendValue: '-2.1%' },
-  { title: '总收入', value: '856.3', unit: '万', color: '#ff4560', trend: 'up', trendValue: '+15.7%' },
+  {
+    title: '总访问量',
+    value: '1,284,567',
+    unit: '次',
+    color: '#00d4ff',
+    trend: 'up',
+    trendValue: '+12.5%',
+  },
+  {
+    title: '今日活跃',
+    value: '38,492',
+    unit: '人',
+    color: '#00e396',
+    trend: 'up',
+    trendValue: '+8.3%',
+  },
+  {
+    title: '转化率',
+    value: '68.7',
+    unit: '%',
+    color: '#feb019',
+    trend: 'down',
+    trendValue: '-2.1%',
+  },
+  {
+    title: '总收入',
+    value: '856.3',
+    unit: '万',
+    color: '#ff4560',
+    trend: 'up',
+    trendValue: '+15.7%',
+  },
 ]
 
 export const lineChartData: LineChartData = {

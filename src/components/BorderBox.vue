@@ -1,14 +1,26 @@
 <template>
-  <div ref="containerRef" class="border-box" :class="[`border-box-${variant}`, { 'is-fullscreen': isFullscreen }]">
+  <div
+    ref="containerRef"
+    class="border-box"
+    :class="[`border-box-${variant}`, { 'is-fullscreen': isFullscreen }]"
+  >
     <div class="border-box-content">
       <div v-if="title" class="border-box-title">
         <span class="title-text">{{ title }}</span>
-        <button class="fullscreen-btn" @click="toggleFullscreen" :title="isFullscreen ? '退出全屏' : '全屏显示'">
+        <button
+          class="fullscreen-btn"
+          @click="toggleFullscreen"
+          :title="isFullscreen ? '退出全屏' : '全屏显示'"
+        >
           <svg v-if="!isFullscreen" width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
-            <path d="M1.5 1h4a.5.5 0 0 1 0 1H2v3.5a.5.5 0 0 1-1 0v-4a.5.5 0 0 1 .5-.5zm9 0h4a.5.5 0 0 1 .5.5v4a.5.5 0 0 1-1 0V2h-3.5a.5.5 0 0 1 0-1zM1 10.5a.5.5 0 0 1 .5.5v3.5h3.5a.5.5 0 0 1 0 1h-4a.5.5 0 0 1-.5-.5v-4a.5.5 0 0 1 .5-.5zm14 0a.5.5 0 0 1 .5.5v4a.5.5 0 0 1-.5.5h-4a.5.5 0 0 1 0-1H14V11a.5.5 0 0 1 .5-.5z"/>
+            <path
+              d="M1.5 1h4a.5.5 0 0 1 0 1H2v3.5a.5.5 0 0 1-1 0v-4a.5.5 0 0 1 .5-.5zm9 0h4a.5.5 0 0 1 .5.5v4a.5.5 0 0 1-1 0V2h-3.5a.5.5 0 0 1 0-1zM1 10.5a.5.5 0 0 1 .5.5v3.5h3.5a.5.5 0 0 1 0 1h-4a.5.5 0 0 1-.5-.5v-4a.5.5 0 0 1 .5-.5zm14 0a.5.5 0 0 1 .5.5v4a.5.5 0 0 1-.5.5h-4a.5.5 0 0 1 0-1H14V11a.5.5 0 0 1 .5-.5z"
+            />
           </svg>
           <svg v-else width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
-            <path d="M5.5 1h4a.5.5 0 0 1 0 1H9v3.5a.5.5 0 0 1-1 0V2H5.5a.5.5 0 0 1 0-1zm9 9h-3.5a.5.5 0 0 1 0-1H14V5.5a.5.5 0 0 1 1 0v4a.5.5 0 0 1-.5.5zM5.5 14H2v-3.5a.5.5 0 0 1 1 0V13h3.5a.5.5 0 0 1 0 1zm9-9h-3.5a.5.5 0 0 1 0-1H14v3.5a.5.5 0 0 1-1 0V5.5z"/>
+            <path
+              d="M5.5 1h4a.5.5 0 0 1 0 1H9v3.5a.5.5 0 0 1-1 0V2H5.5a.5.5 0 0 1 0-1zm9 9h-3.5a.5.5 0 0 1 0-1H14V5.5a.5.5 0 0 1 1 0v4a.5.5 0 0 1-.5.5zM5.5 14H2v-3.5a.5.5 0 0 1 1 0V13h3.5a.5.5 0 0 1 0 1zm9-9h-3.5a.5.5 0 0 1 0-1H14v3.5a.5.5 0 0 1-1 0V5.5z"
+            />
           </svg>
         </button>
       </div>
@@ -40,8 +52,22 @@
       <line :x1="width" y1="0" :x2="width" y2="30" :stroke="accentColor" stroke-width="3" />
       <line x1="0" :y1="height" x2="30" :y2="height" :stroke="accentColor" stroke-width="3" />
       <line x1="0" :y1="height - 30" x2="0" :y2="height" :stroke="accentColor" stroke-width="3" />
-      <line :x1="width - 30" :y1="height" :x2="width" :y2="height" :stroke="accentColor" stroke-width="3" />
-      <line :x1="width" :y1="height - 30" :x2="width" :y2="height" :stroke="accentColor" stroke-width="3" />
+      <line
+        :x1="width - 30"
+        :y1="height"
+        :x2="width"
+        :y2="height"
+        :stroke="accentColor"
+        stroke-width="3"
+      />
+      <line
+        :x1="width"
+        :y1="height - 30"
+        :x2="width"
+        :y2="height"
+        :stroke="accentColor"
+        stroke-width="3"
+      />
     </svg>
   </div>
 </template>
@@ -84,7 +110,7 @@ const accentColor = computed(() => {
 
 const toggleFullscreen = async () => {
   if (!containerRef.value) return
-  
+
   try {
     if (!document.fullscreenElement) {
       await containerRef.value.requestFullscreen()

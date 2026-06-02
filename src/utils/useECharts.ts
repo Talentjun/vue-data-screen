@@ -1,10 +1,7 @@
 import { ref, onMounted, onUnmounted, watch, type Ref } from 'vue'
 import * as echarts from 'echarts'
 
-export function useECharts(
-  chartRef: Ref<HTMLElement | null>,
-  options: Ref<echarts.EChartsOption>
-) {
+export function useECharts(chartRef: Ref<HTMLElement | null>, options: Ref<echarts.EChartsOption>) {
   const chart = ref<echarts.ECharts | null>(null)
   let resizeObserver: ResizeObserver | null = null
 
@@ -27,7 +24,7 @@ export function useECharts(
         chart.value.setOption(newOpts, true)
       }
     },
-    { deep: true }
+    { deep: true },
   )
 
   onMounted(() => {

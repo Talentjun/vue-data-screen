@@ -1,11 +1,24 @@
 <template>
-  <div ref="cardRef" class="stat-card" :class="{ 'is-fullscreen': isFullscreen, 'is-updating': isUpdating }" :style="{ '--card-color': data.color }">
-    <button class="fullscreen-btn" @click="toggleFullscreen" :title="isFullscreen ? '退出全屏' : '全屏显示'">
+  <div
+    ref="cardRef"
+    class="stat-card"
+    :class="{ 'is-fullscreen': isFullscreen, 'is-updating': isUpdating }"
+    :style="{ '--card-color': data.color }"
+  >
+    <button
+      class="fullscreen-btn"
+      @click="toggleFullscreen"
+      :title="isFullscreen ? '退出全屏' : '全屏显示'"
+    >
       <svg v-if="!isFullscreen" width="14" height="14" viewBox="0 0 16 16" fill="currentColor">
-        <path d="M1.5 1h4a.5.5 0 0 1 0 1H2v3.5a.5.5 0 0 1-1 0v-4a.5.5 0 0 1 .5-.5zm9 0h4a.5.5 0 0 1 .5.5v4a.5.5 0 0 1-1 0V2h-3.5a.5.5 0 0 1 0-1zM1 10.5a.5.5 0 0 1 .5.5v3.5h3.5a.5.5 0 0 1 0 1h-4a.5.5 0 0 1-.5-.5v-4a.5.5 0 0 1 .5-.5zm14 0a.5.5 0 0 1 .5.5v4a.5.5 0 0 1-.5.5h-4a.5.5 0 0 1 0-1H14V11a.5.5 0 0 1 .5-.5z"/>
+        <path
+          d="M1.5 1h4a.5.5 0 0 1 0 1H2v3.5a.5.5 0 0 1-1 0v-4a.5.5 0 0 1 .5-.5zm9 0h4a.5.5 0 0 1 .5.5v4a.5.5 0 0 1-1 0V2h-3.5a.5.5 0 0 1 0-1zM1 10.5a.5.5 0 0 1 .5.5v3.5h3.5a.5.5 0 0 1 0 1h-4a.5.5 0 0 1-.5-.5v-4a.5.5 0 0 1 .5-.5zm14 0a.5.5 0 0 1 .5.5v4a.5.5 0 0 1-.5.5h-4a.5.5 0 0 1 0-1H14V11a.5.5 0 0 1 .5-.5z"
+        />
       </svg>
       <svg v-else width="14" height="14" viewBox="0 0 16 16" fill="currentColor">
-        <path d="M5.5 1h4a.5.5 0 0 1 0 1H9v3.5a.5.5 0 0 1-1 0V2H5.5a.5.5 0 0 1 0-1zm9 9h-3.5a.5.5 0 0 1 0-1H14V5.5a.5.5 0 0 1 1 0v4a.5.5 0 0 1-.5.5zM5.5 14H2v-3.5a.5.5 0 0 1 1 0V13h3.5a.5.5 0 0 1 0 1zm9-9h-3.5a.5.5 0 0 1 0-1H14v3.5a.5.5 0 0 1-1 0V5.5z"/>
+        <path
+          d="M5.5 1h4a.5.5 0 0 1 0 1H9v3.5a.5.5 0 0 1-1 0V2H5.5a.5.5 0 0 1 0-1zm9 9h-3.5a.5.5 0 0 1 0-1H14V5.5a.5.5 0 0 1 1 0v4a.5.5 0 0 1-.5.5zM5.5 14H2v-3.5a.5.5 0 0 1 1 0V13h3.5a.5.5 0 0 1 0 1zm9-9h-3.5a.5.5 0 0 1 0-1H14v3.5a.5.5 0 0 1-1 0V5.5z"
+        />
       </svg>
     </button>
 
@@ -17,22 +30,50 @@
     <div class="card-body">
       <div class="card-icon-wrap">
         <div class="card-icon-bg"></div>
-        <svg v-if="data.title.includes('访问')" class="card-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-          <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
-          <circle cx="12" cy="12" r="3"/>
+        <svg
+          v-if="data.title.includes('访问')"
+          class="card-icon-svg"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.8"
+        >
+          <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+          <circle cx="12" cy="12" r="3" />
         </svg>
-        <svg v-else-if="data.title.includes('活跃')" class="card-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
-          <circle cx="9" cy="7" r="4"/>
-          <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
-          <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+        <svg
+          v-else-if="data.title.includes('活跃')"
+          class="card-icon-svg"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.8"
+        >
+          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+          <circle cx="9" cy="7" r="4" />
+          <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+          <path d="M16 3.13a4 4 0 0 1 0 7.75" />
         </svg>
-        <svg v-else-if="data.title.includes('转化')" class="card-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-          <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+        <svg
+          v-else-if="data.title.includes('转化')"
+          class="card-icon-svg"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.8"
+        >
+          <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
         </svg>
-        <svg v-else class="card-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-          <line x1="12" y1="1" x2="12" y2="23"/>
-          <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+        <svg
+          v-else
+          class="card-icon-svg"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.8"
+        >
+          <line x1="12" y1="1" x2="12" y2="23" />
+          <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
         </svg>
       </div>
 
@@ -71,7 +112,7 @@ const isUpdating = ref(false)
 
 const toggleFullscreen = async () => {
   if (!cardRef.value) return
-  
+
   try {
     if (!document.fullscreenElement) {
       await cardRef.value.requestFullscreen()
@@ -123,12 +164,17 @@ const animateValue = (duration = 1200) => {
   requestAnimationFrame(step)
 }
 
-watch(() => props.data.value, (newVal, oldVal) => {
-  if (newVal === oldVal) return
-  isUpdating.value = true
-  setTimeout(() => { isUpdating.value = false }, 300)
-  animateValue(600)
-})
+watch(
+  () => props.data.value,
+  (newVal, oldVal) => {
+    if (newVal === oldVal) return
+    isUpdating.value = true
+    setTimeout(() => {
+      isUpdating.value = false
+    }, 300)
+    animateValue(600)
+  },
+)
 
 onMounted(() => {
   document.addEventListener('fullscreenchange', handleFullscreenChange)
@@ -143,7 +189,12 @@ onUnmounted(() => {
 <style scoped>
 .stat-card {
   position: relative;
-  background: linear-gradient(145deg, rgba(10, 25, 50, 0.95) 0%, rgba(15, 45, 85, 0.8) 50%, rgba(10, 30, 60, 0.95) 100%);
+  background: linear-gradient(
+    145deg,
+    rgba(10, 25, 50, 0.95) 0%,
+    rgba(15, 45, 85, 0.8) 50%,
+    rgba(10, 30, 60, 0.95) 100%
+  );
   border: 1px solid rgba(0, 212, 255, 0.15);
   border-radius: 10px;
   overflow: hidden;
@@ -187,28 +238,32 @@ onUnmounted(() => {
 }
 
 .card-corner.tl {
-  top: 0; left: 0;
+  top: 0;
+  left: 0;
   border-top: 2px solid var(--card-color, #00d4ff);
   border-left: 2px solid var(--card-color, #00d4ff);
   opacity: 0.7;
 }
 
 .card-corner.tr {
-  top: 0; right: 0;
+  top: 0;
+  right: 0;
   border-top: 2px solid var(--card-color, #00d4ff);
   border-right: 2px solid var(--card-color, #00d4ff);
   opacity: 0.7;
 }
 
 .card-corner.bl {
-  bottom: 0; left: 0;
+  bottom: 0;
+  left: 0;
   border-bottom: 2px solid var(--card-color, #00d4ff);
   border-left: 2px solid var(--card-color, #00d4ff);
   opacity: 0.7;
 }
 
 .card-corner.br {
-  bottom: 0; right: 0;
+  bottom: 0;
+  right: 0;
   border-bottom: 2px solid var(--card-color, #00d4ff);
   border-right: 2px solid var(--card-color, #00d4ff);
   opacity: 0.7;
@@ -281,7 +336,11 @@ onUnmounted(() => {
   position: absolute;
   inset: 0;
   border-radius: 10px;
-  background: linear-gradient(135deg, color-mix(in srgb, var(--card-color) 20%, transparent), color-mix(in srgb, var(--card-color) 5%, transparent));
+  background: linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--card-color) 20%, transparent),
+    color-mix(in srgb, var(--card-color) 5%, transparent)
+  );
   border: 1px solid color-mix(in srgb, var(--card-color) 25%, transparent);
   transform: rotate(45deg);
 }
@@ -387,7 +446,11 @@ onUnmounted(() => {
   right: -15%;
   width: 120px;
   height: 120px;
-  background: radial-gradient(circle, color-mix(in srgb, var(--card-color) 15%, transparent), transparent 70%);
+  background: radial-gradient(
+    circle,
+    color-mix(in srgb, var(--card-color) 15%, transparent),
+    transparent 70%
+  );
   pointer-events: none;
   z-index: 0;
 }
@@ -403,15 +466,26 @@ onUnmounted(() => {
   left: -100%;
   width: 100%;
   height: 100%;
-  background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--card-color) 6%, transparent), transparent);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    color-mix(in srgb, var(--card-color) 6%, transparent),
+    transparent
+  );
   pointer-events: none;
   z-index: 0;
   animation: scanLine 4s ease-in-out infinite;
 }
 
 @keyframes scanLine {
-  0% { left: -100%; }
-  50% { left: 100%; }
-  100% { left: 100%; }
+  0% {
+    left: -100%;
+  }
+  50% {
+    left: 100%;
+  }
+  100% {
+    left: 100%;
+  }
 }
 </style>
