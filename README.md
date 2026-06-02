@@ -1,5 +1,135 @@
-# Vue 3 + TypeScript + Vite
+# 智慧数据可视化大屏
 
-This template should help get you started developing with Vue 3 and TypeScript in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+基于 Vue 3 + TypeScript + ECharts 的数据可视化大屏项目，适用于企业数据监控、业务数据展示等场景。
 
-Learn more about the recommended Project Setup and IDE Support in the [Vue Docs TypeScript Guide](https://vuejs.org/guide/typescript/overview.html#project-setup).
+## 项目特点
+
+- **响应式布局** - 自适应不同屏幕尺寸
+- **模块化设计** - 组件复用，易于扩展
+- **全屏展示** - 支持各模块独立全屏查看
+- **动态效果** - 地图省份自动轮播高亮
+- **深色主题** - 科技感十足的视觉设计
+- **实时数据更新** - 支持可配置间隔的数据自动刷新
+- **视觉反馈** - 数字动画、边框闪烁、图表过渡效果
+
+## 技术栈
+
+- **框架** - Vue 3 + TypeScript
+- **构建工具** - Vite
+- **图表库** - ECharts 6
+- **地图数据** - DataV GeoJSON
+
+## 项目结构
+
+```
+vue-data-screen/
+├── public/              # 静态资源
+├── src/
+│   ├── components/      # 组件
+│   │   ├── HeaderTitle.vue   # 标题栏（含更新控制面板）
+│   │   ├── BorderBox.vue     # 边框容器（支持全屏）
+│   │   ├── StatCard.vue      # 统计卡片（支持全屏 + 数字动画）
+│   │   ├── ChinaMap.vue      # 中国地图（自动轮播）
+│   │   ├── LineChart.vue     # 折线图
+│   │   ├── BarChart.vue      # 柱状图
+│   │   ├── PieChart.vue      # 饼图
+│   │   └── RingChart.vue     # 环形图
+│   ├── composables/     # 组合式函数
+│   │   └── useRealtimeData.ts # 实时数据更新管理
+│   ├── data/
+│   │   ├── mockData.ts       # 模拟数据
+│   │   └── china.json        # 中国地图 GeoJSON
+│   ├── types/
+│   │   └── index.ts          # 类型定义
+│   ├── utils/
+│   │   ├── useECharts.ts     # ECharts 配置
+│   │   └── resize.ts         # 窗口调整工具
+│   ├── App.vue               # 主页面
+│   ├── main.ts               # 入口文件
+│   └── style.css             # 全局样式
+├── package.json
+└── vite.config.ts
+```
+
+## 快速开始
+
+### 安装依赖
+
+```bash
+pnpm install
+```
+
+### 启动开发服务器
+
+```bash
+pnpm dev
+```
+
+浏览器访问 http://localhost:3000
+
+### 生产构建
+
+```bash
+pnpm build
+```
+
+## 功能模块
+
+### 统计卡片
+显示核心业务数据，支持全屏查看，包含趋势指标。
+- 数字入场动画（缓出曲线）
+- 数据更新时边框闪烁提示
+- 趋势标签胶囊样式
+
+### 中国地图
+展示全国数据分布，自动轮播高亮省份，支持鼠标交互。
+- 自动轮播：每 2.5 秒随机高亮一个省份
+- 鼠标悬停：高亮鼠标所在省份，暂停自动轮播
+- 颜色渐变：根据数据量显示从浅到深的蓝色
+- 鼠标离开后自动恢复轮播
+
+### 图表模块
+- **折线图** - 展示数据趋势变化，支持平滑过渡动画
+- **柱状图** - 对比不同区域的数据，支持渐变色柱子
+- **饼图/环形图** - 展示数据占比分布
+
+### 全屏功能
+所有模块支持独立全屏显示：
+- 鼠标悬停显示全屏按钮
+- 点击按钮进入/退出全屏
+- 按 ESC 键退出全屏
+
+### 实时数据更新
+支持可配置间隔的数据自动刷新：
+- 顶栏控制面板：播放/暂停按钮、间隔选择器（3s/5s/10s/30s）、状态指示灯
+- 统计卡片：数字平滑过渡动画（600ms）+ 边框闪烁
+- 图表组件：ECharts 原生过渡动画（800ms）
+- 数据波动策略：保持业务合理性（转化率 60%~75%，总访问量单调递增）
+
+## 开发指南
+
+### 添加新图表组件
+
+1. 在 `src/components/` 目录创建新组件
+2. 在 `src/types/index.ts` 中定义数据类型
+3. 在 `src/data/mockData.ts` 中添加模拟数据
+4. 在 `src/App.vue` 中引入并使用组件
+
+### 自定义主题
+
+修改 `src/style.css` 中的全局样式变量：
+- 主色调
+- 背景渐变
+- 边框样式
+- 字体配置
+
+## 浏览器支持
+
+- Chrome 90+
+- Firefox 88+
+- Safari 14+
+- Edge 90+
+
+## 许可证
+
+MIT License

@@ -19,6 +19,9 @@ const colorPalette = ['#00d4ff', '#00e396', '#feb019', '#ff4560', '#775dd0', '#5
 
 const options = computed<echarts.EChartsOption>(() => ({
   backgroundColor: 'transparent',
+  animation: true,
+  animationDuration: 800,
+  animationEasing: 'cubicOut' as const,
   tooltip: {
     trigger: 'item',
     backgroundColor: 'rgba(0, 20, 40, 0.9)',
@@ -39,7 +42,7 @@ const options = computed<echarts.EChartsOption>(() => ({
     {
       type: 'pie',
       radius: ['0%', '65%'],
-      center: ['40%', '50%'],
+      center: ['40%', '45%'],
       data: props.data,
       color: colorPalette,
       label: {
@@ -67,6 +70,5 @@ useECharts(chartRef, options)
 .chart-container {
   width: 100%;
   height: 100%;
-  min-height: 200px;
 }
 </style>

@@ -9,6 +9,24 @@
       <div class="title-decoration right"></div>
     </div>
     <div class="header-right">
+      <div class="control-panel">
+        <button class="control-btn" @click="$emit('toggle')" :title="isRunning ? '暂停更新' : '开始更新'">
+          <svg v-if="isRunning" width="14" height="14" viewBox="0 0 16 16" fill="currentColor">
+            <rect x="3" y="2" width="4" height="12" rx="1"/>
+            <rect x="9" y="2" width="4" height="12" rx="1"/>
+          </svg>
+          <svg v-else width="14" height="14" viewBox="0 0 16 16" fill="currentColor">
+            <polygon points="3,2 14,8 3,14"/>
+          </svg>
+        </button>
+        <select class="interval-select" :value="interval" @change="$emit('update-interval', Number(($event.target as HTMLSelectElement).value))">
+          <option :value="3000">3s</option>
+          <option :value="5000">5s</option>
+          <option :value="10000">10s</option>
+          <option :value="30000">30s</option>
+        </select>
+        <span class="status-dot" :class="{ active: isRunning }"></span>
+      </div>
       <span class="header-weather">晴 26°C</span>
     </div>
   </header>
@@ -19,11 +37,20 @@ import { ref, onMounted, onUnmounted } from 'vue'
 
 interface Props {
   title?: string
+  isRunning?: boolean
+  interval?: number
 }
 
 withDefaults(defineProps<Props>(), {
   title: '智慧数据可视化大屏',
+  isRunning: false,
+  interval: 5000,
 })
+
+defineEmits<{
+  toggle: []
+  'update-interval': [value: number]
+}>()
 
 const currentTime = ref('')
 let timer: ReturnType<typeof setInterval> | null = null
@@ -58,7 +85,7 @@ onUnmounted(() => {
   justify-content: space-between;
   height: 70px;
   padding: 0 30px;
-  background: linear-gradient(180deg, rgba(0, 30, 60, 0.95) 0%, rgba(0, 15, 30, 0.6) 100%);
+  background: linear-gradient(180deg, rgba(10, 40, 80, 0.95) 0%, rgba(8, 25, 50, 0.6) 100%);
   border-bottom: 2px solid rgba(0, 212, 255, 0.3);
   position: relative;
 }
@@ -74,13 +101,8 @@ onUnmounted(() => {
   background: linear-gradient(90deg, transparent 0%, #00d4ff 50%, transparent 100%);
 }
 
-.header-left,
-.header-right {
+.header-left {
   flex: 1;
-}
-
-.header-right {
-  text-align: right;
 }
 
 .header-time,
@@ -140,5 +162,75 @@ onUnmounted(() => {
 
 .title-decoration.right::before {
   left: 0;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  justify-content: flex-end;
+}
+
+.control-panel {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 10px;
+  border-radius: 6px;
+  background: rgba(0, 212, 255, 0.06);
+  border: 1px solid rgba(0, 212, 255, 0.15);
+}
+
+.control-btn {
+  background: rgba(0, 212, 255, 0.1);
+  border: 1px solid rgba(0, 212, 255, 0.25);
+  color: #00d4ff;
+  width: 28px;
+  height: 28px;
+  border-radius: 4px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  padding: 0;
+}
+
+.control-btn:hover {
+  background: rgba(0, 212, 255, 0.25);
+  border-color: #00d4ff;
+}
+
+.interval-select {
+  background: rgba(0, 212, 255, 0.08);
+  border: 1px solid rgba(0, 212, 255, 0.2);
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 12px;
+  padding: 3px 6px;
+  border-radius: 4px;
+  cursor: pointer;
+  outline: none;
+}
+
+.interval-select:focus {
+  border-color: #00d4ff;
+}
+
+.interval-select option {
+  background: #0a1e3c;
+  color: #fff;
+}
+
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.25);
+  transition: all 0.3s ease;
+}
+
+.status-dot.active {
+  background: #00e396;
+  box-shadow: 0 0 6px rgba(0, 227, 150, 0.6);
 }
 </style>

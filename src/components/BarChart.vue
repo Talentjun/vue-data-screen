@@ -15,15 +15,18 @@ interface Props {
 const props = defineProps<Props>()
 const chartRef = ref<HTMLElement | null>(null)
 
-const colors = ['#00d4ff', '#feb019']
+const colors = ['#00bfff', '#ff4757']
 
 const options = computed<echarts.EChartsOption>(() => ({
   backgroundColor: 'transparent',
+  animation: true,
+  animationDuration: 800,
+  animationEasing: 'cubicOut' as const,
   grid: {
-    top: 40,
-    right: 20,
+    top: 30,
+    right: 15,
     bottom: 30,
-    left: 55,
+    left: 45,
   },
   tooltip: {
     trigger: 'axis',
@@ -41,34 +44,43 @@ const options = computed<echarts.EChartsOption>(() => ({
     type: 'category',
     data: props.data.xAxis,
     axisLine: { lineStyle: { color: 'rgba(0, 212, 255, 0.3)' } },
-    axisLabel: { color: 'rgba(255,255,255,0.65)', fontSize: 11 },
+    axisLabel: { color: 'rgba(255,255,255,0.6)', fontSize: 10, margin: 6 },
     axisTick: { show: false },
   },
   yAxis: {
     type: 'value',
+    min: 0,
     splitLine: { lineStyle: { color: 'rgba(0, 212, 255, 0.1)' } },
     axisLine: { show: false },
-    axisLabel: { color: 'rgba(255,255,255,0.65)', fontSize: 11 },
+    axisLabel: { color: 'rgba(255,255,255,0.6)', fontSize: 10 },
   },
   series: props.data.series.map((s, i) => ({
     name: s.name,
     type: 'bar' as const,
     data: s.data,
-    barWidth: '30%',
+    barWidth: '35%',
     barGap: '20%',
     itemStyle: {
       color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
         { offset: 0, color: colors[i] },
-        { offset: 1, color: `${colors[i]}33` },
+        { offset: 0.5, color: `${colors[i]}cc` },
+        { offset: 1, color: `${colors[i]}66` },
       ]),
       borderRadius: [4, 4, 0, 0],
+      shadowColor: `${colors[i]}80`,
+      shadowBlur: 10,
+      shadowOffsetY: 4,
     },
     emphasis: {
       itemStyle: {
         color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-          { offset: 0, color: colors[i] },
-          { offset: 1, color: `${colors[i]}66` },
+          { offset: 0, color: '#fff' },
+          { offset: 0.2, color: colors[i] },
+          { offset: 1, color: `${colors[i]}99` },
         ]),
+        shadowColor: `${colors[i]}cc`,
+        shadowBlur: 20,
+        shadowOffsetY: 6,
       },
     },
   })),
@@ -81,6 +93,5 @@ useECharts(chartRef, options)
 .chart-container {
   width: 100%;
   height: 100%;
-  min-height: 200px;
 }
 </style>

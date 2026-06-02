@@ -133,7 +133,7 @@ onUnmounted(() => {
 <style scoped>
 .border-box {
   position: relative;
-  background: linear-gradient(135deg, rgba(0, 20, 40, 0.9) 0%, rgba(0, 40, 80, 0.6) 100%);
+  background: linear-gradient(135deg, rgba(10, 30, 60, 0.9) 0%, rgba(15, 50, 95, 0.6) 100%);
   backdrop-filter: blur(10px);
   overflow: hidden;
 }
@@ -143,15 +143,17 @@ onUnmounted(() => {
   height: 100vh;
   padding: 0;
   margin: 0;
-  background: linear-gradient(135deg, rgba(0, 20, 40, 0.98) 0%, rgba(0, 40, 80, 0.95) 100%);
+  background: linear-gradient(135deg, rgba(12, 30, 60, 0.98) 0%, rgba(18, 55, 100, 0.95) 100%);
 }
 
 .border-box-content {
   position: relative;
   z-index: 1;
-  padding: 16px;
+  padding: 14px 14px 6px 14px;
   height: 100%;
   box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
 }
 
 .border-box.is-fullscreen .border-box-content {
@@ -159,16 +161,22 @@ onUnmounted(() => {
 }
 
 .border-box-title {
-  margin-bottom: 12px;
-  padding-bottom: 8px;
+  margin-bottom: 8px;
+  padding-bottom: 6px;
   border-bottom: 1px solid rgba(0, 212, 255, 0.2);
   display: flex;
   align-items: center;
   justify-content: space-between;
+  flex-shrink: 0;
+}
+
+.border-box-content > :last-child:not(.border-box-title) {
+  flex: 1;
+  min-height: 0;
 }
 
 .title-text {
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 600;
   color: #00d4ff;
   letter-spacing: 2px;
@@ -216,6 +224,7 @@ onUnmounted(() => {
   width: 100%;
   height: 100%;
   pointer-events: none;
+  z-index: 0;
 }
 
 .border-box.is-fullscreen .border-svg {

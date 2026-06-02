@@ -1,6 +1,12 @@
 <template>
   <div class="data-screen" :style="screenStyle">
-    <HeaderTitle title="智慧数据可视化大屏" />
+    <HeaderTitle
+      title="智慧数据可视化大屏"
+      :is-running="isRunning"
+      :interval="interval"
+      @toggle="toggle"
+      @update-interval="(v: number) => setInterval(v)"
+    />
 
     <div class="main-content">
       <div class="left-panel">
@@ -23,7 +29,7 @@
 
       <div class="center-panel">
         <div class="stat-cards">
-          <StatCard v-for="(card, index) in statCards" :key="index" :data="card" />
+          <StatCard v-for="card in statCards" :key="card.title" :data="card" />
         </div>
         <div class="map-container">
           <BorderBox title="全国数据分布">
@@ -63,14 +69,36 @@ import LineChart from './components/LineChart.vue'
 import BarChart from './components/BarChart.vue'
 import PieChart from './components/PieChart.vue'
 import RingChart from './components/RingChart.vue'
+import { useRealtimeData } from './composables/useRealtimeData'
 import {
+  statCards as initialStatCards,
+  lineChartData as initialLineChart,
+  barChartData as initialBarChart,
+  pieChartData as initialPieChart,
+  ringChartData as initialRingChart,
+  mapData as initialMapData,
+} from './data/mockData'
+
+const {
   statCards,
   lineChartData,
   barChartData,
   pieChartData,
   ringChartData,
   mapData,
-} from './data/mockData'
+  isRunning,
+  interval,
+  toggle,
+  setInterval,
+} = useRealtimeData(
+  initialStatCards,
+  initialLineChart,
+  initialBarChart,
+  initialPieChart,
+  initialRingChart,
+  initialMapData,
+  { interval: 5000 },
+)
 
 const screenStyle = computed(() => ({
   width: '100vw',
@@ -83,7 +111,7 @@ const screenStyle = computed(() => ({
 .data-screen {
   width: 100vw;
   height: 100vh;
-  background: radial-gradient(ellipse at center, #0a1929 0%, #050d1a 60%, #020810 100%);
+  background: radial-gradient(ellipse at center, #112240 0%, #0a1830 60%, #0c1a2e 100%);
   display: flex;
   flex-direction: column;
   overflow: hidden;
