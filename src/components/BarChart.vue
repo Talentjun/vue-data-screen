@@ -15,7 +15,7 @@ interface Props {
 const props = defineProps<Props>()
 const chartRef = ref<HTMLElement | null>(null)
 
-const colors = ['#00bfff', '#ff4757']
+const colors = ['#00e5ff', '#ff2d55']
 
 const options = computed<echarts.EChartsOption>(() => ({
   backgroundColor: 'transparent',
@@ -63,8 +63,8 @@ const options = computed<echarts.EChartsOption>(() => ({
     itemStyle: {
       color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
         { offset: 0, color: colors[i] },
-        { offset: 0.5, color: `${colors[i]}cc` },
-        { offset: 1, color: `${colors[i]}66` },
+        { offset: 0.5, color: `${colors[i]}dd` },
+        { offset: 1, color: `${colors[i]}88` },
       ]),
       borderRadius: [4, 4, 0, 0],
       shadowColor: `${colors[i]}80`,
@@ -75,8 +75,8 @@ const options = computed<echarts.EChartsOption>(() => ({
       itemStyle: {
         color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
           { offset: 0, color: '#fff' },
-          { offset: 0.2, color: colors[i] },
-          { offset: 1, color: `${colors[i]}99` },
+          { offset: 0.15, color: colors[i] },
+          { offset: 1, color: `${colors[i]}bb` },
         ]),
         shadowColor: `${colors[i]}cc`,
         shadowBlur: 20,
