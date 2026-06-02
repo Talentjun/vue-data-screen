@@ -136,7 +136,7 @@ onUnmounted(() => {
 <style scoped>
 .stat-card {
   position: relative;
-  background: linear-gradient(145deg, rgba(0, 18, 38, 0.95) 0%, rgba(0, 35, 70, 0.8) 50%, rgba(0, 20, 45, 0.95) 100%);
+  background: linear-gradient(145deg, rgba(10, 25, 50, 0.95) 0%, rgba(15, 45, 85, 0.8) 50%, rgba(10, 30, 60, 0.95) 100%);
   border: 1px solid rgba(0, 212, 255, 0.15);
   border-radius: 10px;
   overflow: hidden;
@@ -150,7 +150,7 @@ onUnmounted(() => {
   padding: 0;
   margin: 0;
   border-radius: 0;
-  background: linear-gradient(145deg, rgba(0, 18, 38, 0.98) 0%, rgba(0, 35, 70, 0.95) 100%);
+  background: linear-gradient(145deg, rgba(12, 30, 55, 0.98) 0%, rgba(18, 50, 95, 0.95) 100%);
   display: flex;
   align-items: center;
   justify-content: center;

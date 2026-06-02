@@ -58,7 +58,7 @@ onUnmounted(() => {
   justify-content: space-between;
   height: 70px;
   padding: 0 30px;
-  background: linear-gradient(180deg, rgba(0, 30, 60, 0.95) 0%, rgba(0, 15, 30, 0.6) 100%);
+  background: linear-gradient(180deg, rgba(10, 40, 80, 0.95) 0%, rgba(8, 25, 50, 0.6) 100%);
   border-bottom: 2px solid rgba(0, 212, 255, 0.3);
   position: relative;
 }

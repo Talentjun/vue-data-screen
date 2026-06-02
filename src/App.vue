@@ -83,7 +83,7 @@ const screenStyle = computed(() => ({
 .data-screen {
   width: 100vw;
   height: 100vh;
-  background: radial-gradient(ellipse at center, #0a1929 0%, #050d1a 60%, #020810 100%);
+  background: radial-gradient(ellipse at center, #112240 0%, #0a1830 60%, #0c1a2e 100%);
   display: flex;
   flex-direction: column;
   overflow: hidden;

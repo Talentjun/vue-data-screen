@@ -18,9 +18,9 @@ const chartRef = ref<HTMLElement | null>(null)
 const options = computed<echarts.EChartsOption>(() => ({
   backgroundColor: 'transparent',
   grid: {
-    top: 40,
+    top: 35,
     right: 20,
-    bottom: 30,
+    bottom: 10,
     left: 50,
   },
   tooltip: {

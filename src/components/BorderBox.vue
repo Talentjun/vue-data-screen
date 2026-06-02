@@ -133,7 +133,7 @@ onUnmounted(() => {
 <style scoped>
 .border-box {
   position: relative;
-  background: linear-gradient(135deg, rgba(0, 20, 40, 0.9) 0%, rgba(0, 40, 80, 0.6) 100%);
+  background: linear-gradient(135deg, rgba(10, 30, 60, 0.9) 0%, rgba(15, 50, 95, 0.6) 100%);
   backdrop-filter: blur(10px);
   overflow: hidden;
 }
@@ -143,7 +143,7 @@ onUnmounted(() => {
   height: 100vh;
   padding: 0;
   margin: 0;
-  background: linear-gradient(135deg, rgba(0, 20, 40, 0.98) 0%, rgba(0, 40, 80, 0.95) 100%);
+  background: linear-gradient(135deg, rgba(12, 30, 60, 0.98) 0%, rgba(18, 55, 100, 0.95) 100%);
 }
 
 .border-box-content {

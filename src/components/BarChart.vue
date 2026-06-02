@@ -15,14 +15,14 @@ interface Props {
 const props = defineProps<Props>()
 const chartRef = ref<HTMLElement | null>(null)
 
-const colors = ['#00d4ff', '#feb019']
+const colors = ['#00bfff', '#ff4757']
 
 const options = computed<echarts.EChartsOption>(() => ({
   backgroundColor: 'transparent',
   grid: {
-    top: 40,
+    top: 35,
     right: 20,
-    bottom: 30,
+    bottom: 10,
     left: 55,
   },
   tooltip: {
@@ -54,21 +54,29 @@ const options = computed<echarts.EChartsOption>(() => ({
     name: s.name,
     type: 'bar' as const,
     data: s.data,
-    barWidth: '30%',
+    barWidth: '35%',
     barGap: '20%',
     itemStyle: {
       color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
         { offset: 0, color: colors[i] },
-        { offset: 1, color: `${colors[i]}33` },
+        { offset: 0.5, color: `${colors[i]}cc` },
+        { offset: 1, color: `${colors[i]}66` },
       ]),
       borderRadius: [4, 4, 0, 0],
+      shadowColor: `${colors[i]}80`,
+      shadowBlur: 10,
+      shadowOffsetY: 4,
     },
     emphasis: {
       itemStyle: {
         color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-          { offset: 0, color: colors[i] },
-          { offset: 1, color: `${colors[i]}66` },
+          { offset: 0, color: '#fff' },
+          { offset: 0.2, color: colors[i] },
+          { offset: 1, color: `${colors[i]}99` },
         ]),
+        shadowColor: `${colors[i]}cc`,
+        shadowBlur: 20,
+        shadowOffsetY: 6,
       },
     },
   })),

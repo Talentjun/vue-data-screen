@@ -39,7 +39,7 @@ const options = computed<echarts.EChartsOption>(() => ({
     {
       type: 'pie',
       radius: ['0%', '65%'],
-      center: ['40%', '50%'],
+      center: ['40%', '45%'],
       data: props.data,
       color: colorPalette,
       label: {
