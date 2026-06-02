@@ -6,6 +6,7 @@
 import { ref, onMounted, onUnmounted } from 'vue'
 import * as echarts from 'echarts'
 import type { MapDataItem } from '../types'
+import chinaGeoJson from '../data/china.json'
 
 interface Props {
   data: MapDataItem[]
@@ -16,11 +17,11 @@ const chartRef = ref<HTMLElement | null>(null)
 let chart: echarts.ECharts | null = null
 let resizeObserver: ResizeObserver | null = null
 let highlightTimer: ReturnType<typeof setInterval> | null = null
+let mouseLeaveTimer: ReturnType<typeof setTimeout> | null = null
 let currentHighlightName = ''
+let isUserInteracting = false
 let featureNames: string[] = []
 let allData: { name: string; value: number }[] = []
-
-const CHINA_GEO_URL = 'https://geo.datav.aliyun.com/areas_v3/bound/100000_full.json'
 
 const BASE_BLUE = ['#0a2e5c', '#0d4a8a', '#1a6fb5', '#2196f3', '#42a5f5', '#64b5f6']
 
@@ -63,49 +64,70 @@ const buildAllData = (hoverName: string) => {
   })
 }
 
-const initChart = async () => {
+const initChart = () => {
   if (!chartRef.value) return
 
-  try {
-    const response = await fetch(CHINA_GEO_URL)
-    const chinaGeoJson = await response.json()
-    featureNames = chinaGeoJson.features.map((f: any) => f.properties.name)
+  featureNames = (chinaGeoJson as any).features.map((f: any) => f.properties.name)
 
-    allData = featureNames.map((name) => {
-      const shortName = name.replace(/省|市|自治区|维吾尔|壮族|回族|特别行政区/g, '')
-      const found = props.data.find(d => d.name === shortName)
-      return { name, value: found ? found.value : 0 }
-    })
+  allData = featureNames.map((name) => {
+    const shortName = name.replace(/省|市|自治区|维吾尔|壮族|回族|特别行政区/g, '')
+    const found = props.data.find(d => d.name === shortName)
+    return { name, value: found ? found.value : 0 }
+  })
 
-    echarts.registerMap('china', chinaGeoJson as any)
-    chart = echarts.init(chartRef.value)
-    renderChart()
+  echarts.registerMap('china', chinaGeoJson as any)
+  chart = echarts.init(chartRef.value)
+  renderChart()
 
-    chart.on('mouseover', (params: any) => {
-      if (params.componentType !== 'series' || params.seriesType !== 'map') return
-      stopHighlightLoop()
-      currentHighlightName = params.name
-      renderChart(params.name)
-    })
-
-    chart.on('mouseout', () => {
-      startHighlightLoop()
-    })
-
-    startHighlightLoop()
-  } catch (error) {
-    console.error('Failed to load China map data:', error)
-    if (chartRef.value) {
-      chartRef.value.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100%;color:rgba(255,255,255,0.5);">地图数据加载失败</div>'
+  chart.on('mouseover', (params: any) => {
+    if (params.componentType !== 'series' || params.seriesType !== 'map') return
+    isUserInteracting = true
+    if (mouseLeaveTimer) {
+      clearTimeout(mouseLeaveTimer)
+      mouseLeaveTimer = null
     }
-  }
+    stopHighlightLoop()
+    currentHighlightName = params.name
+    renderChart(params.name)
+    chart?.dispatchAction({
+      type: 'showTip',
+      seriesIndex: 0,
+      name: params.name,
+    })
+  })
+
+  chart.on('mouseout', (params: any) => {
+    if (params.componentType !== 'series' || params.seriesType !== 'map') return
+    isUserInteracting = false
+    if (mouseLeaveTimer) {
+      clearTimeout(mouseLeaveTimer)
+    }
+    chart?.dispatchAction({ type: 'hideTip' })
+    mouseLeaveTimer = setTimeout(() => {
+      mouseLeaveTimer = null
+      if (!isUserInteracting) {
+        startHighlightLoop()
+      }
+    }, 300)
+  })
+
+  chart.on('globalout', () => {
+    isUserInteracting = false
+    if (mouseLeaveTimer) {
+      clearTimeout(mouseLeaveTimer)
+      mouseLeaveTimer = null
+    }
+    chart?.dispatchAction({ type: 'hideTip' })
+    startHighlightLoop()
+  })
+
+  startHighlightLoop()
 }
 
 const renderChart = (hoverName?: string) => {
   if (!chart) return
 
   chart.setOption({
-    backgroundColor: 'transparent',
     tooltip: {
       trigger: 'item',
       backgroundColor: 'rgba(0, 20, 40, 0.9)',
@@ -113,8 +135,7 @@ const renderChart = (hoverName?: string) => {
       textStyle: { color: '#fff' },
       formatter: (params: any) => {
         if (params.componentType === 'series') {
-          const name = params.name.replace(/省|市|自治区|维吾尔|壮族|回族|特别行政区/g, '')
-          return `${name}<br/>数据量: ${params.value || 0}`
+          return `${params.name}<br/>数据值: ${params.value || 0}`
         }
         return ''
       },
@@ -125,26 +146,27 @@ const renderChart = (hoverName?: string) => {
         map: 'china',
         roam: false,
         zoom: 1.2,
-        center: [104, 36],
-        data: buildAllData(hoverName || ''),
+        center: [105, 35],
+        aspectScale: 0.75,
+        label: {
+          show: false,
+        },
         emphasis: {
           label: {
             show: true,
             color: '#fff',
-            fontSize: 12,
-            fontWeight: 'bold',
           },
           itemStyle: {
-            areaColor: '#f5c542',
-            borderColor: '#d4a017',
-            borderWidth: 2,
-            shadowColor: 'rgba(245, 197, 66, 0.8)',
-            shadowBlur: 20,
+            areaColor: getYellowColor(
+              Math.max(...allData.map((d) => d.value), 1),
+              Math.max(...allData.map((d) => d.value), 1),
+            ),
           },
         },
+        data: buildAllData(hoverName || ''),
       },
     ],
-  }, true)
+  })
 }
 
 const startHighlightLoop = () => {
@@ -172,7 +194,11 @@ const randomHighlight = () => {
 
   currentHighlightName = newName
   renderChart(newName)
-  chart.dispatchAction({ type: 'showTip', seriesIndex: 0, name: newName })
+  chart.dispatchAction({
+    type: 'showTip',
+    seriesIndex: 0,
+    name: newName,
+  })
 }
 
 const handleResize = () => {
@@ -190,6 +216,10 @@ onMounted(() => {
 
 onUnmounted(() => {
   stopHighlightLoop()
+  if (mouseLeaveTimer) {
+    clearTimeout(mouseLeaveTimer)
+    mouseLeaveTimer = null
+  }
   chart?.dispose()
   resizeObserver?.disconnect()
   window.removeEventListener('resize', handleResize)
