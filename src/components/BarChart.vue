@@ -20,10 +20,10 @@ const colors = ['#00bfff', '#ff4757']
 const options = computed<echarts.EChartsOption>(() => ({
   backgroundColor: 'transparent',
   grid: {
-    top: 35,
-    right: 20,
-    bottom: 10,
-    left: 55,
+    top: 30,
+    right: 15,
+    bottom: 30,
+    left: 45,
   },
   tooltip: {
     trigger: 'axis',
@@ -41,14 +41,15 @@ const options = computed<echarts.EChartsOption>(() => ({
     type: 'category',
     data: props.data.xAxis,
     axisLine: { lineStyle: { color: 'rgba(0, 212, 255, 0.3)' } },
-    axisLabel: { color: 'rgba(255,255,255,0.65)', fontSize: 11 },
+    axisLabel: { color: 'rgba(255,255,255,0.6)', fontSize: 10, margin: 6 },
     axisTick: { show: false },
   },
   yAxis: {
     type: 'value',
+    min: 0,
     splitLine: { lineStyle: { color: 'rgba(0, 212, 255, 0.1)' } },
     axisLine: { show: false },
-    axisLabel: { color: 'rgba(255,255,255,0.65)', fontSize: 11 },
+    axisLabel: { color: 'rgba(255,255,255,0.6)', fontSize: 10 },
   },
   series: props.data.series.map((s, i) => ({
     name: s.name,
@@ -89,6 +90,5 @@ useECharts(chartRef, options)
 .chart-container {
   width: 100%;
   height: 100%;
-  min-height: 200px;
 }
 </style>

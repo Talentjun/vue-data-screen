@@ -67,6 +67,5 @@ useECharts(chartRef, options)
 .chart-container {
   width: 100%;
   height: 100%;
-  min-height: 200px;
 }
 </style>
