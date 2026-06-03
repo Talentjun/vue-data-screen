@@ -23,35 +23,60 @@ let isUserInteracting = false
 let featureNames: string[] = []
 let allData: { name: string; value: number }[] = []
 
-const BASE_BLUE = ['#0a2e5c', '#0d4a8a', '#1a6fb5', '#2196f3', '#42a5f5', '#64b5f6']
+// 温度色系：淡黄色（低温）到 橘红色（高温）
+const TEMP_COLORS = [
+  '#FFF9C4', // 淡黄（极低温）
+  '#FFEE58', // 黄色
+  '#FFD54F', // 深黄
+  '#FFB74D', // 橙黄
+  '#FF9800', // 橙色
+  '#FF7043', // 深橙
+  '#F4511E', // 橘红
+  '#E64A19', // 红橙（高温）
+]
 
-const getColor = (value: number, max: number) => {
-  const ratio = Math.min(value / max, 1)
-  const idx = Math.round(ratio * (BASE_BLUE.length - 1))
-  return BASE_BLUE[idx]
+const TEMP_HOVER_COLORS = [
+  '#FFF176', // 亮黄（极低温悬停）
+  '#FFD600', // 亮黄色
+  '#FFC400', // 亮深黄
+  '#FFA726', // 亮橙黄
+  '#FB8C00', // 亮橙色
+  '#FF5722', // 亮深橙
+  '#D84315', // 亮橘红
+  '#BF360C', // 亮红橙（高温悬停）
+]
+
+const getColor = (value: number, min: number, max: number) => {
+  if (max === min) return TEMP_COLORS[0]
+  const ratio = Math.max(0, Math.min(1, (value - min) / (max - min)))
+  const idx = Math.round(ratio * (TEMP_COLORS.length - 1))
+  return TEMP_COLORS[idx]
 }
 
-const getYellowColor = (value: number, max: number) => {
-  const ratio = Math.min(value / max, 1)
-  const r = Math.round(255 - (255 - 180) * ratio)
-  const g = Math.round(220 - (220 - 120) * ratio)
-  const b = Math.round(50 - (50 - 0) * ratio)
-  return `rgb(${r}, ${g}, ${b})`
+const getHoverColor = (value: number, min: number, max: number) => {
+  if (max === min) return TEMP_HOVER_COLORS[0]
+  const ratio = Math.max(0, Math.min(1, (value - min) / (max - min)))
+  const idx = Math.round(ratio * (TEMP_HOVER_COLORS.length - 1))
+  return TEMP_HOVER_COLORS[idx]
 }
 
 const buildAllData = (hoverName: string) => {
-  const maxValue = Math.max(...allData.map((d) => d.value), 1)
+  const values = allData.map((d) => d.value)
+  const minValue = Math.min(...values)
+  const maxValue = Math.max(...values, 1)
   return allData.map((d) => {
     const isHover = d.name === hoverName
-    const color = isHover ? getYellowColor(d.value, maxValue) : getColor(d.value, maxValue)
+    const color = isHover
+      ? getHoverColor(d.value, minValue, maxValue)
+      : getColor(d.value, minValue, maxValue)
     return {
       name: d.name,
       value: d.value,
       itemStyle: {
         areaColor: color,
-        borderColor: isHover ? '#d4a017' : 'rgba(0, 212, 255, 0.4)',
+        borderColor: isHover ? '#E65100' : 'rgba(255, 152, 0, 0.4)',
         borderWidth: isHover ? 2 : 1,
-        shadowColor: isHover ? `rgba(245, 197, 66, 0.6)` : 'transparent',
+        shadowColor: isHover ? `rgba(255, 87, 34, 0.6)` : 'transparent',
         shadowBlur: isHover ? 15 : 0,
       },
       label: {
@@ -127,6 +152,10 @@ const initChart = () => {
 const renderChart = (hoverName?: string) => {
   if (!chart) return
 
+  const values = allData.map((d) => d.value)
+  const minValue = Math.min(...values)
+  const maxValue = Math.max(...values, 1)
+
   chart.setOption({
     animation: true,
     animationDuration: 800,
@@ -134,14 +163,38 @@ const renderChart = (hoverName?: string) => {
     tooltip: {
       trigger: 'item',
       backgroundColor: 'rgba(0, 20, 40, 0.9)',
-      borderColor: 'rgba(0, 212, 255, 0.3)',
+      borderColor: 'rgba(255, 152, 0, 0.5)',
       textStyle: { color: '#fff' },
       formatter: (params: any) => {
         if (params.componentType === 'series') {
-          return `${params.name}<br/>数据值: ${params.value || 0}`
+          const temp = params.value || 0
+          let weather = '晴'
+          if (temp < 5) weather = '寒冷'
+          else if (temp < 15) weather = '凉爽'
+          else if (temp < 25) weather = '温暖'
+          else if (temp < 35) weather = '炎热'
+          else weather = '酷热'
+          return `${params.name}<br/>🌡️ 温度: ${temp}°C<br/>☁️ 天气: ${weather}`
         }
         return ''
       },
+    },
+    visualMap: {
+      show: true,
+      min: minValue,
+      max: maxValue,
+      text: ['高温', '低温'],
+      textStyle: {
+        color: 'rgba(255,255,255,0.7)',
+      },
+      inRange: {
+        color: TEMP_COLORS,
+      },
+      orient: 'vertical',
+      left: 10,
+      bottom: 20,
+      itemWidth: 12,
+      itemHeight: 100,
     },
     series: [
       {
@@ -160,9 +213,10 @@ const renderChart = (hoverName?: string) => {
             color: '#fff',
           },
           itemStyle: {
-            areaColor: getYellowColor(
+            areaColor: getHoverColor(
               Math.max(...allData.map((d) => d.value), 1),
-              Math.max(...allData.map((d) => d.value), 1),
+              minValue,
+              maxValue,
             ),
           },
         },
