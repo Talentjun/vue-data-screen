@@ -90,7 +90,6 @@ onUnmounted(() => {
 .header {
   display: flex;
   align-items: center;
-  justify-content: space-between;
   height: 70px;
   padding: 0 30px;
   background: linear-gradient(180deg, rgba(10, 40, 80, 0.95) 0%, rgba(8, 25, 50, 0.6) 100%);
@@ -175,6 +174,7 @@ onUnmounted(() => {
 }
 
 .header-right {
+  flex: 1;
   display: flex;
   align-items: center;
   gap: 16px;

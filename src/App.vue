@@ -32,7 +32,7 @@
           <StatCard v-for="card in statCards" :key="card.title" :data="card" />
         </div>
         <div class="map-container">
-          <BorderBox title="全国数据分布">
+          <BorderBox title="全国天气温度">
             <ChinaMap :data="mapData" />
           </BorderBox>
         </div>

@@ -176,7 +176,8 @@ export function useRealtimeData(
   function updateMapData() {
     const newData = deepCloneMapData(mapData.value)
     for (const item of newData) {
-      item.value = fluctuate(item.value, 0.1, 10)
+      // 温度数据在 -10 到 45 度之间波动
+      item.value = Math.round(clamp(item.value + (Math.random() * 4 - 2), -10, 45))
     }
     mapData.value = newData
   }
