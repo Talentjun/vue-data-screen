@@ -3,7 +3,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { computed, useTemplateRef } from 'vue'
 import * as echarts from 'echarts'
 import { useECharts } from '../utils/useECharts'
 import type { BarChartData } from '../types'
@@ -12,8 +12,8 @@ interface Props {
   data: BarChartData
 }
 
-const props = defineProps<Props>()
-const chartRef = ref<HTMLElement | null>(null)
+const { data } = defineProps<Props>()
+const chartRef = useTemplateRef<HTMLElement>('chartRef')
 
 const colors = ['#00e5ff', '#ff2d55']
 
@@ -35,14 +35,14 @@ const options = computed<echarts.EChartsOption>(() => ({
     textStyle: { color: '#fff' },
   },
   legend: {
-    data: props.data.series.map((s) => s.name),
+    data: data.series.map((s) => s.name),
     textStyle: { color: 'rgba(255,255,255,0.65)' },
     right: 10,
     top: 5,
   },
   xAxis: {
     type: 'category',
-    data: props.data.xAxis,
+    data: data.xAxis,
     axisLine: { lineStyle: { color: 'rgba(0, 212, 255, 0.3)' } },
     axisLabel: { color: 'rgba(255,255,255,0.6)', fontSize: 10, margin: 6 },
     axisTick: { show: false },
@@ -54,7 +54,7 @@ const options = computed<echarts.EChartsOption>(() => ({
     axisLine: { show: false },
     axisLabel: { color: 'rgba(255,255,255,0.6)', fontSize: 10 },
   },
-  series: props.data.series.map((s, i) => ({
+  series: data.series.map((s, i) => ({
     name: s.name,
     type: 'bar' as const,
     data: s.data,

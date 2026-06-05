@@ -3,7 +3,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { computed, useTemplateRef } from 'vue'
 import * as echarts from 'echarts'
 import { useECharts } from '../utils/useECharts'
 import type { CalendarChartData } from '../types'
@@ -12,11 +12,11 @@ interface Props {
   data: CalendarChartData
 }
 
-const props = defineProps<Props>()
-const chartRef = ref<HTMLElement | null>(null)
+const { data } = defineProps<Props>()
+const chartRef = useTemplateRef<HTMLElement>('chartRef')
 
 const options = computed<echarts.EChartsOption>(() => {
-  const maxValue = Math.max(...props.data.data.map((item) => item[1]))
+  const maxValue = Math.max(...data.data.map((item) => item[1]))
 
   return {
     backgroundColor: 'transparent',
@@ -56,7 +56,7 @@ const options = computed<echarts.EChartsOption>(() => {
       right: 20,
       bottom: 50,
       cellSize: ['auto', 13],
-      range: String(props.data.year),
+      range: String(data.year),
       itemStyle: {
         borderWidth: 2,
         borderColor: 'rgba(0, 20, 40, 0.8)',
@@ -90,7 +90,7 @@ const options = computed<echarts.EChartsOption>(() => {
       {
         type: 'heatmap',
         coordinateSystem: 'calendar',
-        data: props.data.data,
+        data: data.data,
         emphasis: {
           itemStyle: {
             shadowBlur: 10,

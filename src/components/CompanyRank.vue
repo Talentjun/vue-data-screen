@@ -39,9 +39,9 @@ interface Props {
   data: ChartDataItem[]
 }
 
-const props = defineProps<Props>()
+const { data } = defineProps<Props>()
 
-const maxValue = computed(() => Math.max(...props.data.map((item) => item.value)))
+const maxValue = computed(() => Math.max(...data.map((item) => item.value)))
 
 const getGradient = (index: number) => {
   const gradients = [

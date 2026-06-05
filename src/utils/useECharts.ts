@@ -1,4 +1,4 @@
-import { ref, onMounted, onUnmounted, watch, type Ref } from 'vue'
+import { ref, onMounted, onUnmounted, watch, onWatcherCleanup, type Ref } from 'vue'
 import * as echarts from 'echarts'
 
 export function useECharts(chartRef: Ref<HTMLElement | null>, options: Ref<echarts.EChartsOption>) {
@@ -27,9 +27,31 @@ export function useECharts(chartRef: Ref<HTMLElement | null>, options: Ref<echar
     { deep: true },
   )
 
+  // 监听 chartRef 变化，在 ref 元素变更时重新初始化图表
+  watch(chartRef, (newEl, oldEl) => {
+    // 清理旧的 ResizeObserver
+    resizeObserver?.disconnect()
+    resizeObserver = null
+
+    if (newEl) {
+      // 旧图表实例先销毁
+      chart.value?.dispose()
+      initChart()
+      resizeObserver = new ResizeObserver(handleResize)
+      resizeObserver.observe(newEl)
+    }
+
+    onWatcherCleanup(() => {
+      resizeObserver?.disconnect()
+      resizeObserver = null
+    })
+  })
+
   onMounted(() => {
-    initChart()
-    if (chartRef.value) {
+    if (!chart.value) {
+      initChart()
+    }
+    if (chartRef.value && !resizeObserver) {
       resizeObserver = new ResizeObserver(handleResize)
       resizeObserver.observe(chartRef.value)
     }
