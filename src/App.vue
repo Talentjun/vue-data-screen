@@ -11,8 +11,8 @@
     <div class="main-content">
       <div class="left-panel">
         <div class="panel-item">
-          <BorderBox title="访问趋势">
-            <LineChart :data="lineChartData" />
+          <BorderBox title="企业排名">
+            <CompanyRank :data="companyRankData" />
           </BorderBox>
         </div>
         <div class="panel-item">
@@ -70,6 +70,7 @@ import BarChart from './components/BarChart.vue'
 import PieChart from './components/PieChart.vue'
 import RingChart from './components/RingChart.vue'
 import CalendarChart from './components/CalendarChart.vue'
+import CompanyRank from './components/CompanyRank.vue'
 import { useRealtimeData } from './composables/useRealtimeData'
 import {
   statCards as initialStatCards,
@@ -78,6 +79,7 @@ import {
   pieChartData as initialPieChart,
   ringChartData as initialRingChart,
   calendarChartData as initialCalendarChart,
+  companyRankData,
   mapData as initialMapData,
 } from './data/mockData'
 

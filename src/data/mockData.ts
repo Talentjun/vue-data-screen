@@ -86,6 +86,19 @@ export const ringChartData: ChartDataItem[] = [
   { name: '其他地区', value: 8 },
 ]
 
+export const companyRankData: ChartDataItem[] = [
+  { name: '华为技术有限公司', value: 98 },
+  { name: '腾讯科技有限公司', value: 95 },
+  { name: '阿里巴巴集团', value: 93 },
+  { name: '字节跳动有限公司', value: 91 },
+  { name: '小米科技有限公司', value: 88 },
+  { name: '百度在线网络技术', value: 85 },
+  { name: '京东集团股份有限', value: 82 },
+  { name: '美团点评科技有限', value: 79 },
+  { name: '网易杭州网络有限', value: 76 },
+  { name: '拼多多有限公司', value: 73 },
+]
+
 // 温度数据（单位：°C）- 模拟各省份当前温度
 export const mapData: MapDataItem[] = [
   { name: '北京', value: 32 },

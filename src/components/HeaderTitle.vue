@@ -49,11 +49,12 @@ interface Props {
   interval?: number
 }
 
-withDefaults(defineProps<Props>(), {
-  title: '智慧数据可视化大屏',
-  isRunning: false,
-  interval: 5000,
-})
+// withDefaults(defineProps<Props>(), {
+//   title: '智慧数据可视化大屏',
+//   isRunning: false,
+//   interval: 5000,
+// })
+const { title = '智慧数据可视化大屏', isRunning = false, interval = 5000 } = defineProps<Props>()
 
 defineEmits<{
   toggle: []
