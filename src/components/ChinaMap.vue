@@ -3,7 +3,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted } from 'vue'
+import { useTemplateRef, onMounted, onUnmounted } from 'vue'
 import * as echarts from 'echarts'
 import type { MapDataItem } from '../types'
 import chinaGeoJson from '../data/china.json'
@@ -12,8 +12,8 @@ interface Props {
   data: MapDataItem[]
 }
 
-const props = defineProps<Props>()
-const chartRef = ref<HTMLElement | null>(null)
+const { data } = defineProps<Props>()
+const chartRef = useTemplateRef<HTMLElement>('chartRef')
 let chart: echarts.ECharts | null = null
 let resizeObserver: ResizeObserver | null = null
 let highlightTimer: ReturnType<typeof setInterval> | null = null
@@ -96,7 +96,7 @@ const initChart = () => {
 
   allData = featureNames.map((name) => {
     const shortName = name.replace(/省|市|自治区|维吾尔|壮族|回族|特别行政区/g, '')
-    const found = props.data.find((d) => d.name === shortName)
+    const found = data.find((d) => d.name === shortName)
     return { name, value: found ? found.value : 0 }
   })
 

@@ -96,18 +96,18 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch, onMounted, onUnmounted } from 'vue'
+import { ref, watch, onMounted, onUnmounted, useTemplateRef, onWatcherCleanup } from 'vue'
 import type { StatCardData } from '../types'
 
 interface Props {
   data: StatCardData
 }
 
-const props = defineProps<Props>()
+const { data } = defineProps<Props>()
 
 const isFullscreen = ref(false)
-const cardRef = ref<HTMLElement | null>(null)
-const displayValue = ref(props.data.value)
+const cardRef = useTemplateRef<HTMLElement>('cardRef')
+const displayValue = ref(data.value)
 const isUpdating = ref(false)
 
 const toggleFullscreen = async () => {
@@ -131,7 +131,7 @@ const handleFullscreenChange = () => {
 }
 
 const animateValue = (duration = 1200) => {
-  const target = props.data.value
+  const target = data.value
   const numStr = target.toString().replace(/,/g, '')
   const num = parseFloat(numStr)
   if (isNaN(num)) {
@@ -165,13 +165,14 @@ const animateValue = (duration = 1200) => {
 }
 
 watch(
-  () => props.data.value,
+  () => data.value,
   (newVal, oldVal) => {
     if (newVal === oldVal) return
     isUpdating.value = true
-    setTimeout(() => {
+    const timer = setTimeout(() => {
       isUpdating.value = false
     }, 300)
+    onWatcherCleanup(() => clearTimeout(timer))
     animateValue(600)
   },
 )

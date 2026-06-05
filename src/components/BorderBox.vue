@@ -73,7 +73,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, onUnmounted } from 'vue'
+import { ref, computed, onMounted, onUnmounted, useTemplateRef } from 'vue'
 
 interface Props {
   title?: string
@@ -86,7 +86,7 @@ const width = ref(300)
 const height = ref(200)
 const isFullscreen = ref(false)
 let resizeObserver: ResizeObserver | null = null
-const containerRef = ref<HTMLElement | null>(null)
+const containerRef = useTemplateRef<HTMLElement>('containerRef')
 
 const borderColor = computed(() => {
   const colors: Record<string, string> = {

@@ -3,7 +3,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { computed, useTemplateRef } from 'vue'
 import * as echarts from 'echarts'
 import { useECharts } from '../utils/useECharts'
 import type { ChartDataItem } from '../types'
@@ -12,8 +12,8 @@ interface Props {
   data: ChartDataItem[]
 }
 
-const props = defineProps<Props>()
-const chartRef = ref<HTMLElement | null>(null)
+const { data } = defineProps<Props>()
+const chartRef = useTemplateRef<HTMLElement>('chartRef')
 
 const colorPalette = ['#00d4ff', '#00e396', '#feb019', '#ff4560', '#775dd0', '#546E7A', '#26a69a']
 
@@ -43,7 +43,7 @@ const options = computed<echarts.EChartsOption>(() => ({
       type: 'pie',
       radius: ['0%', '65%'],
       center: ['40%', '45%'],
-      data: props.data,
+      data: data,
       color: colorPalette,
       label: {
         show: false,
